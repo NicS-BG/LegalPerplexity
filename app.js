@@ -1,450 +1,486 @@
-// RegTech Monitor Pro - Application Logic
-
-// Application data
+// Application Data
 const appData = {
-  "dashboard_metrics": {
-    "active_alerts": 27,
-    "jurisdictions_monitored": 15,
-    "ai_analysis_pending": 8,
-    "weekly_reports_generated": 142
-  },
-  "recent_alerts": [
-    {
-      "id": 1,
-      "title": "NY State Climate Act Implementation Updates",
-      "jurisdiction": "New York State",
-      "priority": "High",
-      "date": "2025-06-12",
-      "category": "ESG",
-      "impact": "Affects investment mandates for NY retirement systems",
-      "source": "NY DEC"
-    },
-    {
-      "id": 2,
-      "title": "NYC Administrative Code Amendment - Fiduciary Standards",
-      "jurisdiction": "New York City",
-      "priority": "High",
-      "date": "2025-06-11",
-      "category": "Fiduciary",
-      "impact": "New restrictions on certain investment vehicles",
-      "source": "NYC Comptroller Office"
-    },
-    {
-      "id": 3,
-      "title": "Federal ESG Disclosure Requirements Update",
-      "jurisdiction": "Federal",
-      "priority": "Medium",
-      "date": "2025-06-10",
-      "category": "ESG",
-      "impact": "Enhanced reporting requirements for fund managers",
-      "source": "SEC"
-    }
+  "states": [
+    {"code": "NY", "name": "New York", "lastUpdated": "2025-06-16T11:05:00Z"},
+    {"code": "CA", "name": "California", "lastUpdated": "2025-06-16T11:04:00Z"},
+    {"code": "TX", "name": "Texas", "lastUpdated": "2025-06-16T11:03:00Z"},
+    {"code": "FL", "name": "Florida", "lastUpdated": "2025-06-16T11:02:00Z"},
+    {"code": "IL", "name": "Illinois", "lastUpdated": "2025-06-16T11:01:00Z"},
+    {"code": "PA", "name": "Pennsylvania", "lastUpdated": "2025-06-16T11:00:00Z"},
+    {"code": "OH", "name": "Ohio", "lastUpdated": "2025-06-16T10:59:00Z"},
+    {"code": "MI", "name": "Michigan", "lastUpdated": "2025-06-16T10:58:00Z"},
+    {"code": "NC", "name": "North Carolina", "lastUpdated": "2025-06-16T10:57:00Z"},
+    {"code": "GA", "name": "Georgia", "lastUpdated": "2025-06-16T10:56:00Z"}
   ],
-  "jurisdictions": [
-    {
-      "name": "New York State",
-      "status": "Active",
-      "last_update": "2025-06-12",
-      "alert_count": 12,
-      "sources": ["NY Legislature API", "NY State Gov", "Thomson Reuters"]
-    },
-    {
-      "name": "New York City",
-      "status": "Active", 
-      "last_update": "2025-06-11",
-      "alert_count": 8,
-      "sources": ["NYC.gov", "NYC Administrative Code", "Bloomberg Law"]
-    },
-    {
-      "name": "California",
-      "status": "Active",
-      "last_update": "2025-06-10",
-      "alert_count": 15,
-      "sources": ["CA Legislature", "CalPERS", "Legal Database APIs"]
-    }
-  ],
-  "ai_analysis": [
-    {
-      "title": "NY Retirement Plan Investment Restrictions Analysis",
-      "status": "Completed",
-      "date": "2025-06-12",
-      "key_findings": [
-        "No new country restrictions identified",
-        "Enhanced ESG requirements for fossil fuel investments",
-        "Concentration limits remain at 5% for single issuer",
-        "New climate disclosure requirements effective 2026"
-      ],
-      "confidence": 92,
-      "sources_analyzed": 47
-    },
-    {
-      "title": "ESG Regulatory Convergence Analysis", 
-      "status": "In Progress",
-      "date": "2025-06-12",
-      "progress": 75
-    }
-  ],
-  "political_sentiment": {
-    "current_trend": "Positive for ESG initiatives",
-    "trend_direction": "up",
-    "key_indicators": [
-      {
-        "indicator": "NY Attorney General ESG Stance",
-        "sentiment": "Strongly Supportive",
-        "impact": "High"
-      },
-      {
-        "indicator": "NYC Council Climate Initiatives",
-        "sentiment": "Supportive", 
-        "impact": "Medium"
-      }
+  "regulations": {
+    "NY": [
+      {"title": "NYC Administrative Code Amendment - ESG Investment Requirements", "effectiveDate": "2025-07-01", "impact": "High", "summary": "New ESG screening requirements for all retirement system investments. Prohibits investments in fossil fuel companies with >50% revenue from coal.", "source": "NYC Administrative Code §16-129.1"},
+      {"title": "NY State Fiduciary Rule Update", "effectiveDate": "2025-08-15", "impact": "Medium", "summary": "Enhanced fiduciary standards for investment advisers managing public pension assets.", "source": "NY Financial Services Law §408"}
+    ],
+    "CA": [
+      {"title": "California Climate Risk Disclosure Act", "effectiveDate": "2025-09-01", "impact": "High", "summary": "Mandatory climate risk reporting for institutional investors. Requires stress testing for climate scenarios.", "source": "CA Government Code §7511.5"},
+      {"title": "CalPERS Tobacco Divestment Expansion", "effectiveDate": "2025-06-30", "impact": "Medium", "summary": "Expands tobacco divestment to include e-cigarette and vaping companies.", "source": "CalPERS Board Resolution 2025-04"}
+    ],
+    "TX": [
+      {"title": "Texas Anti-ESG Investment Act", "effectiveDate": "2025-10-01", "impact": "High", "summary": "Prohibits state pension funds from considering ESG factors in investment decisions. Requires investment committee certification.", "source": "TX Government Code §815.202"},
+      {"title": "Texas Boycott Prohibition Extension", "effectiveDate": "2025-07-15", "impact": "Medium", "summary": "Extends boycott prohibitions to include energy transition companies that restrict fossil fuel business.", "source": "TX Government Code §2270.0002"}
+    ],
+    "FL": [
+      {"title": "Florida Investment Protection Act", "effectiveDate": "2025-09-15", "impact": "High", "summary": "Requires state pension funds to prioritize financial returns over ESG considerations.", "source": "FL Statute §215.47"}
+    ],
+    "IL": [
+      {"title": "Illinois Sustainable Investment Policy", "effectiveDate": "2025-08-01", "impact": "Medium", "summary": "Establishes ESG integration framework for state retirement systems.", "source": "IL Public Act 103-0123"}
     ]
   },
-  "clients": [
-    {
-      "name": "NYC Teachers Retirement System",
-      "jurisdiction": "New York City",
-      "mandate_type": "Public Pension",
-      "compliance_status": "Current",
-      "last_review": "2025-06-05",
-      "key_requirements": ["ESG Integration", "Fossil Fuel Restrictions", "Local Investment Preferences"]
+  "news": {
+    "NY": [
+      {"headline": "NYC Pension Funds Target Net Zero by 2040", "source": "Wall Street Journal", "date": "2025-06-15", "sentiment": 0.3, "summary": "NYC Comptroller announces accelerated timeline for pension fund decarbonization."},
+      {"headline": "NY Attorney General Investigates Private Equity Fees", "source": "Financial Times", "date": "2025-06-14", "sentiment": -0.2, "summary": "Investigation into fee structures for NY state pension investments."}
+    ],
+    "CA": [
+      {"headline": "CalPERS Votes Against All Oil Company Directors", "source": "Reuters", "date": "2025-06-15", "sentiment": 0.4, "summary": "CalPERS uses voting power to pressure oil companies on climate transition."},
+      {"headline": "California Pension Funding Reaches Record High", "source": "Los Angeles Times", "date": "2025-06-13", "sentiment": 0.6, "summary": "Strong market performance boosts California pension system funding ratios."}
+    ],
+    "TX": [
+      {"headline": "Texas Retirement System Challenges ESG Restrictions", "source": "Dallas Morning News", "date": "2025-06-14", "sentiment": -0.1, "summary": "Teacher retirement system requests clarification on ESG investment limitations."},
+      {"headline": "Texas Pension Funds Outperform National Average", "source": "Houston Chronicle", "date": "2025-06-12", "sentiment": 0.5, "summary": "Texas public pension systems report strong returns despite ESG restrictions."}
+    ],
+    "FL": [
+      {"headline": "Florida Pension System Divests from ESG Funds", "source": "Miami Herald", "date": "2025-06-13", "sentiment": -0.3, "summary": "State Board of Administration removes ESG-focused funds from investment options."}
+    ],
+    "IL": [
+      {"headline": "Illinois Teachers' Retirement System Adopts Climate Strategy", "source": "Chicago Tribune", "date": "2025-06-12", "sentiment": 0.4, "summary": "TRS announces comprehensive climate investment strategy."}
+    ]
+  },
+  "aiAnalysis": {
+    "NY": {
+      "concentrationLimits": "Maximum 5% allocation to single issuer for equity investments",
+      "prohibitedInvestments": "Companies with >50% revenue from coal, private prisons, tobacco",
+      "esgRequirements": "Mandatory ESG screening and climate risk assessment required",
+      "sanctionsCompliance": "Full compliance with OFAC sanctions and anti-boycott laws required",
+      "confidenceScore": 0.89
     },
-    {
-      "name": "NY State Common Retirement Fund",
-      "jurisdiction": "New York State", 
-      "mandate_type": "State Pension",
-      "compliance_status": "Under Review",
-      "last_review": "2025-06-01",
-      "key_requirements": ["Climate Risk Disclosure", "Shareholder Engagement", "Diversification Limits"]
-    }
-  ],
-  "weekly_reports": [
-    {
-      "week": "June 5-11, 2025",
-      "changes_detected": 23,
-      "high_priority": 5,
-      "clients_affected": 8,
-      "status": "Published"
+    "CA": {
+      "concentrationLimits": "Maximum 3% allocation to single issuer for alternative investments",
+      "prohibitedInvestments": "Tobacco, thermal coal, private prisons, Sudan-related investments",
+      "esgRequirements": "Climate stress testing and ESG integration mandatory",
+      "sanctionsCompliance": "Enhanced due diligence for emerging market investments",
+      "confidenceScore": 0.92
     },
-    {
-      "week": "May 29 - June 4, 2025", 
-      "changes_detected": 31,
-      "high_priority": 7,
-      "clients_affected": 12,
-      "status": "Published"
+    "TX": {
+      "concentrationLimits": "Maximum 10% allocation to alternative investments",
+      "prohibitedInvestments": "Companies that boycott fossil fuel industries",
+      "esgRequirements": "ESG considerations prohibited in investment decisions",
+      "sanctionsCompliance": "Standard OFAC compliance required",
+      "confidenceScore": 0.85
+    },
+    "FL": {
+      "concentrationLimits": "Maximum 7% allocation to single asset class",
+      "prohibitedInvestments": "ESG-focused funds, companies with BDS activities",
+      "esgRequirements": "ESG factors cannot be primary investment consideration",
+      "sanctionsCompliance": "Standard OFAC compliance required",
+      "confidenceScore": 0.87
+    },
+    "IL": {
+      "concentrationLimits": "Maximum 5% allocation to single issuer",
+      "prohibitedInvestments": "Companies with poor labor practices, tobacco",
+      "esgRequirements": "ESG integration encouraged but not mandatory",
+      "sanctionsCompliance": "Enhanced due diligence for foreign investments",
+      "confidenceScore": 0.84
     }
-  ]
+  },
+  "sentimentScores": {
+    "NY": 0.2,
+    "CA": 0.4,
+    "TX": -0.1,
+    "FL": 0.1,
+    "IL": 0.3,
+    "PA": 0.0,
+    "OH": 0.2,
+    "MI": 0.1,
+    "NC": 0.0,
+    "GA": -0.1
+  },
+  "complianceAlerts": {
+    "NY": [
+      {"type": "Immediate Action Required", "message": "ESG screening requirements effective July 1, 2025", "riskLevel": "High"},
+      {"type": "Monitoring Required", "message": "Proposed fiduciary rule changes under review", "riskLevel": "Medium"}
+    ],
+    "CA": [
+      {"type": "Immediate Action Required", "message": "Climate risk disclosure deadline September 1, 2025", "riskLevel": "High"},
+      {"type": "Informational Only", "message": "CalPERS board meeting scheduled for June 20", "riskLevel": "Low"}
+    ],
+    "TX": [
+      {"type": "Immediate Action Required", "message": "Anti-ESG certification required by October 1, 2025", "riskLevel": "High"},
+      {"type": "Monitoring Required", "message": "Boycott prohibition expansion under legislative review", "riskLevel": "Medium"}
+    ],
+    "FL": [
+      {"type": "Immediate Action Required", "message": "ESG fund divestment deadline August 15, 2025", "riskLevel": "High"}
+    ],
+    "IL": [
+      {"type": "Monitoring Required", "message": "ESG integration guidelines under development", "riskLevel": "Medium"}
+    ]
+  }
 };
 
-// Initialize application
+// Global state
+let currentState = null;
+let isRefreshing = false;
+
+// DOM Elements - Initialize after DOM is loaded
+let stateSelector, refreshBtn, currentStateInfo, currentStateName, lastUpdated, sentimentIndicator;
+let quickStats, mainDashboard, noStateSelected, loadingOverlay;
+
+// Initialize Application
 document.addEventListener('DOMContentLoaded', function() {
-    initializeNavigation();
-    loadDashboardData();
-    loadAlertsData();
-    loadJurisdictionsData();
-    loadAIAnalysisData();
-    loadPoliticalSentimentData();
-    loadReportingData();
-    loadClientsData();
-    createSentimentChart();
+    // Get DOM elements
+    stateSelector = document.getElementById('stateSelector');
+    refreshBtn = document.getElementById('refreshBtn');
+    currentStateInfo = document.getElementById('currentStateInfo');
+    currentStateName = document.getElementById('currentStateName');
+    lastUpdated = document.getElementById('lastUpdated');
+    sentimentIndicator = document.getElementById('sentimentIndicator');
+    quickStats = document.getElementById('quickStats');
+    mainDashboard = document.getElementById('mainDashboard');
+    noStateSelected = document.getElementById('noStateSelected');
+    loadingOverlay = document.getElementById('loadingOverlay');
+    
+    // Initialize functionality
+    initializeStateSelector();
+    initializeEventListeners();
+    updateLastReportDate();
 });
 
-// Navigation handling
-function initializeNavigation() {
-    const navButtons = document.querySelectorAll('.nav-btn');
+// Initialize State Selector
+function initializeStateSelector() {
+    if (!stateSelector) return;
     
-    navButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const targetSection = this.dataset.section;
-            showSection(targetSection);
-            
-            // Update active nav button
-            navButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-        });
+    // Clear existing options except the first one
+    stateSelector.innerHTML = '<option value="">Choose a state...</option>';
+    
+    // Add all states to dropdown
+    appData.states.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state.code;
+        option.textContent = `${state.name} (${state.code})`;
+        stateSelector.appendChild(option);
     });
 }
 
-function showSection(sectionId) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
+// Initialize Event Listeners
+function initializeEventListeners() {
+    if (stateSelector) {
+        stateSelector.addEventListener('change', handleStateChange);
+    }
     
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.classList.add('active');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', handleRefresh);
+    }
+    
+    // Report buttons
+    const previewBtn = document.getElementById('previewReportBtn');
+    const downloadBtn = document.getElementById('downloadReportBtn');
+    
+    if (previewBtn) {
+        previewBtn.addEventListener('click', handlePreviewReport);
+    }
+    
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', handleDownloadReport);
     }
 }
 
-// Load dashboard metrics
-function loadDashboardData() {
-    const metrics = appData.dashboard_metrics;
+// Handle State Change
+function handleStateChange(event) {
+    const stateCode = event.target.value;
     
-    document.getElementById('active-alerts').textContent = metrics.active_alerts;
-    document.getElementById('jurisdictions-monitored').textContent = metrics.jurisdictions_monitored;
-    document.getElementById('ai-analysis-pending').textContent = metrics.ai_analysis_pending;
-    document.getElementById('weekly-reports').textContent = metrics.weekly_reports_generated;
+    if (!stateCode) {
+        showNoStateSelected();
+        return;
+    }
+    
+    const state = appData.states.find(s => s.code === stateCode);
+    if (state) {
+        currentState = state;
+        updateUI();
+    }
 }
 
-// Load alerts data
-function loadAlertsData() {
-    const alertsList = document.getElementById('alerts-list');
-    const alerts = appData.recent_alerts;
+// Handle Refresh
+function handleRefresh() {
+    if (isRefreshing || !currentState) return;
     
-    alertsList.innerHTML = '';
+    isRefreshing = true;
+    showLoadingOverlay();
     
-    alerts.forEach(alert => {
-        const alertElement = document.createElement('div');
-        alertElement.className = `alert-item ${alert.priority.toLowerCase()}-priority`;
-        
-        alertElement.innerHTML = `
-            <div class="alert-header">
-                <div class="alert-title">${alert.title}</div>
-                <div class="alert-priority ${alert.priority.toLowerCase()}">${alert.priority}</div>
-            </div>
-            <div class="alert-meta">
-                <span><strong>Jurisdiction:</strong> ${alert.jurisdiction}</span>
-                <span><strong>Date:</strong> ${formatDate(alert.date)}</span>
-                <span><strong>Category:</strong> ${alert.category}</span>
-                <span><strong>Source:</strong> ${alert.source}</span>
-            </div>
-            <div class="alert-impact">${alert.impact}</div>
-        `;
-        
-        alertsList.appendChild(alertElement);
-    });
-}
-
-// Load jurisdictions data
-function loadJurisdictionsData() {
-    const jurisdictionDetails = document.getElementById('jurisdiction-details');
-    const jurisdictions = appData.jurisdictions;
+    // Update refresh button
+    const refreshText = refreshBtn.querySelector('.refresh-text');
+    const refreshSpinner = refreshBtn.querySelector('.refresh-spinner');
     
-    jurisdictionDetails.innerHTML = '';
+    if (refreshText && refreshSpinner) {
+        refreshText.classList.add('hidden');
+        refreshSpinner.classList.remove('hidden');
+    }
+    refreshBtn.disabled = true;
     
-    jurisdictions.forEach(jurisdiction => {
-        const jurisdictionElement = document.createElement('div');
-        jurisdictionElement.className = 'jurisdiction-item';
+    // Simulate API call delay
+    setTimeout(() => {
+        // Update last updated time
+        currentState.lastUpdated = new Date().toISOString();
         
-        jurisdictionElement.innerHTML = `
-            <div class="jurisdiction-header">
-                <div class="jurisdiction-name">${jurisdiction.name}</div>
-                <div class="jurisdiction-status">${jurisdiction.status}</div>
-            </div>
-            <div class="jurisdiction-details">
-                <span><strong>Last Update:</strong> ${formatDate(jurisdiction.last_update)}</span>
-                <span><strong>Alerts:</strong> ${jurisdiction.alert_count}</span>
-            </div>
-            <div style="margin-top: 12px;">
-                <strong>Sources:</strong> ${jurisdiction.sources.join(', ')}
-            </div>
-        `;
+        // Update UI
+        updateUI();
+        hideLoadingOverlay();
         
-        jurisdictionDetails.appendChild(jurisdictionElement);
-    });
-}
-
-// Load AI analysis data
-function loadAIAnalysisData() {
-    const analysisListEl = document.getElementById('ai-analysis-list');
-    const analyses = appData.ai_analysis;
-    
-    analysisListEl.innerHTML = '';
-    
-    analyses.forEach(analysis => {
-        const analysisElement = document.createElement('div');
-        analysisElement.className = 'analysis-item';
-        
-        let content = `
-            <div class="analysis-title">${analysis.title}</div>
-            <div class="analysis-meta">
-                <span><strong>Status:</strong> ${analysis.status}</span>
-                <span><strong>Date:</strong> ${formatDate(analysis.date)}</span>
-        `;
-        
-        if (analysis.confidence) {
-            content += `<span class="confidence-score">
-                <strong>Confidence:</strong> ${analysis.confidence}%
-                <div class="confidence-bar">
-                    <div class="confidence-fill" style="width: ${analysis.confidence}%"></div>
-                </div>
-            </span>`;
+        // Reset refresh button
+        if (refreshText && refreshSpinner) {
+            refreshText.classList.remove('hidden');
+            refreshSpinner.classList.add('hidden');
         }
-        
-        if (analysis.sources_analyzed) {
-            content += `<span><strong>Sources Analyzed:</strong> ${analysis.sources_analyzed}</span>`;
-        }
-        
-        content += `</div>`;
-        
-        if (analysis.key_findings) {
-            content += `
-                <div style="margin-top: 12px;">
-                    <strong>Key Findings:</strong>
-                    <ul class="key-findings">
-                        ${analysis.key_findings.map(finding => `<li>${finding}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-        }
-        
-        if (analysis.progress) {
-            content += `
-                <div style="margin-top: 12px;">
-                    <strong>Progress:</strong> ${analysis.progress}%
-                    <div class="confidence-bar">
-                        <div class="confidence-fill" style="width: ${analysis.progress}%"></div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        analysisElement.innerHTML = content;
-        analysisListEl.appendChild(analysisElement);
-    });
+        refreshBtn.disabled = false;
+        isRefreshing = false;
+    }, 2000);
 }
 
-// Load political sentiment data
-function loadPoliticalSentimentData() {
-    const indicatorsEl = document.getElementById('political-indicators');
-    const indicators = appData.political_sentiment.key_indicators;
-    
-    indicatorsEl.innerHTML = '';
-    
-    indicators.forEach(indicator => {
-        const indicatorElement = document.createElement('div');
-        indicatorElement.className = 'indicator-item';
-        
-        indicatorElement.innerHTML = `
-            <div class="indicator-name">${indicator.indicator}</div>
-            <div>
-                <div class="indicator-sentiment">${indicator.sentiment}</div>
-                <div style="font-size: 12px; color: var(--color-text-secondary);">Impact: ${indicator.impact}</div>
-            </div>
-        `;
-        
-        indicatorsEl.appendChild(indicatorElement);
-    });
+// Show/Hide UI Elements
+function showNoStateSelected() {
+    currentState = null;
+    if (currentStateInfo) currentStateInfo.classList.add('hidden');
+    if (quickStats) quickStats.classList.add('hidden');
+    if (mainDashboard) mainDashboard.classList.add('hidden');
+    if (noStateSelected) noStateSelected.classList.remove('hidden');
 }
 
-// Load reporting data
-function loadReportingData() {
-    const reportsListEl = document.getElementById('reports-list');
-    const reports = appData.weekly_reports;
-    
-    reportsListEl.innerHTML = '';
-    
-    reports.forEach(report => {
-        const reportElement = document.createElement('div');
-        reportElement.className = 'report-item';
-        
-        reportElement.innerHTML = `
-            <div class="report-week">${report.week}</div>
-            <div class="report-stats">
-                <div><strong>Changes:</strong> ${report.changes_detected}</div>
-                <div><strong>High Priority:</strong> ${report.high_priority}</div>
-                <div><strong>Clients Affected:</strong> ${report.clients_affected}</div>
-            </div>
-            <div style="margin-top: 8px;">
-                <span class="status status--success">${report.status}</span>
-            </div>
-        `;
-        
-        reportsListEl.appendChild(reportElement);
-    });
+function showLoadingOverlay() {
+    if (loadingOverlay) loadingOverlay.classList.remove('hidden');
 }
 
-// Load clients data
-function loadClientsData() {
-    const clientsListEl = document.getElementById('clients-list');
-    const clients = appData.clients;
-    
-    clientsListEl.innerHTML = '';
-    
-    clients.forEach(client => {
-        const clientElement = document.createElement('div');
-        clientElement.className = 'client-item';
-        
-        const statusClass = client.compliance_status.toLowerCase().replace(' ', '-');
-        
-        clientElement.innerHTML = `
-            <div class="client-header">
-                <div class="client-name">${client.name}</div>
-                <div class="compliance-status ${statusClass}">${client.compliance_status}</div>
-            </div>
-            <div class="client-details">
-                <div><strong>Jurisdiction:</strong> ${client.jurisdiction}</div>
-                <div><strong>Mandate Type:</strong> ${client.mandate_type}</div>
-                <div><strong>Last Review:</strong> ${formatDate(client.last_review)}</div>
-            </div>
-            <div style="margin-top: 16px;">
-                <strong>Key Requirements:</strong>
-                <ul class="requirements-list">
-                    ${client.key_requirements.map(req => `<li>${req}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-        
-        clientsListEl.appendChild(clientElement);
-    });
+function hideLoadingOverlay() {
+    if (loadingOverlay) loadingOverlay.classList.add('hidden');
 }
 
-// Create sentiment chart
-function createSentimentChart() {
-    const ctx = document.getElementById('sentimentChart');
-    if (!ctx) return;
+// Update UI
+function updateUI() {
+    if (!currentState) return;
     
-    // Sample sentiment data over time
-    const sentimentData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-            label: 'ESG Sentiment Score',
-            data: [65, 72, 78, 75, 82, 88],
-            borderColor: '#1FB8CD',
-            backgroundColor: 'rgba(31, 184, 205, 0.1)',
-            fill: true,
-            tension: 0.4
-        }, {
-            label: 'Regulatory Stability',
-            data: [70, 68, 75, 72, 78, 85],
-            borderColor: '#FFC185',
-            backgroundColor: 'rgba(255, 193, 133, 0.1)',
-            fill: true,
-            tension: 0.4
-        }]
-    };
+    // Show relevant sections
+    if (currentStateInfo) currentStateInfo.classList.remove('hidden');
+    if (quickStats) quickStats.classList.remove('hidden');
+    if (mainDashboard) mainDashboard.classList.remove('hidden');
+    if (noStateSelected) noStateSelected.classList.add('hidden');
     
-    new Chart(ctx, {
-        type: 'line',
-        data: sentimentData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        callback: function(value) {
-                            return value + '%';
-                        }
-                    }
-                }
-            }
-        }
-    });
+    // Update state info
+    updateStateInfo();
+    updateQuickStats();
+    updateRegulations();
+    updateComplianceAlerts();
+    updateNewsContent();
+    updateAIAnalysis();
+    updateESGContent();
 }
 
-// Utility functions
+// Update State Info
+function updateStateInfo() {
+    if (currentStateName) {
+        currentStateName.textContent = currentState.name;
+    }
+    if (lastUpdated) {
+        lastUpdated.textContent = formatDateTime(currentState.lastUpdated);
+    }
+    
+    // Update sentiment
+    const sentiment = appData.sentimentScores[currentState.code] || 0;
+    updateSentimentIndicator(sentiment);
+}
+
+// Update Sentiment Indicator
+function updateSentimentIndicator(sentiment) {
+    if (!sentimentIndicator) return;
+    
+    const sentimentFill = sentimentIndicator.querySelector('.sentiment-fill');
+    const sentimentScore = sentimentIndicator.querySelector('.sentiment-score');
+    
+    if (sentimentFill && sentimentScore) {
+        // Convert sentiment (-1 to 1) to percentage (0 to 100)
+        const percentage = ((sentiment + 1) / 2) * 100;
+        sentimentFill.style.width = `${percentage}%`;
+        sentimentScore.textContent = sentiment.toFixed(1);
+    }
+}
+
+// Update Quick Stats
+function updateQuickStats() {
+    const regulations = appData.regulations[currentState.code] || [];
+    const alerts = appData.complianceAlerts[currentState.code] || [];
+    
+    const totalRegulationsEl = document.getElementById('totalRegulations');
+    const recentChangesEl = document.getElementById('recentChanges');
+    const highRiskAlertsEl = document.getElementById('highRiskAlerts');
+    const esgUpdatesEl = document.getElementById('esgUpdates');
+    
+    if (totalRegulationsEl) totalRegulationsEl.textContent = regulations.length;
+    if (recentChangesEl) recentChangesEl.textContent = regulations.length;
+    if (highRiskAlertsEl) highRiskAlertsEl.textContent = alerts.filter(a => a.riskLevel === 'High').length;
+    if (esgUpdatesEl) esgUpdatesEl.textContent = regulations.filter(r => r.title.toLowerCase().includes('esg')).length;
+}
+
+// Update Regulations
+function updateRegulations() {
+    const container = document.getElementById('regulationsContent');
+    if (!container) return;
+    
+    const regulations = appData.regulations[currentState.code] || [];
+    
+    if (regulations.length === 0) {
+        container.innerHTML = '<p class="empty-state">No regulatory changes found for this state</p>';
+        return;
+    }
+    
+    container.innerHTML = regulations.map(reg => `
+        <div class="regulation-item impact-${reg.impact.toLowerCase()}">
+            <div class="regulation-header">
+                <h4 class="regulation-title">${reg.title}</h4>
+                <span class="regulation-impact ${reg.impact.toLowerCase()}">${reg.impact}</span>
+            </div>
+            <div class="regulation-meta">
+                <span>Effective: ${formatDate(reg.effectiveDate)}</span>
+            </div>
+            <div class="regulation-summary">${reg.summary}</div>
+            <div class="regulation-source">Source: ${reg.source}</div>
+        </div>
+    `).join('');
+}
+
+// Update Compliance Alerts
+function updateComplianceAlerts() {
+    const container = document.getElementById('alertsContent');
+    if (!container) return;
+    
+    const alerts = appData.complianceAlerts[currentState.code] || [];
+    
+    if (alerts.length === 0) {
+        container.innerHTML = '<p class="empty-state">No compliance alerts for this state</p>';
+        return;
+    }
+    
+    container.innerHTML = alerts.map(alert => `
+        <div class="alert-item">
+            <div class="alert-icon ${alert.riskLevel.toLowerCase()}"></div>
+            <div class="alert-content">
+                <div class="alert-type">${alert.type}</div>
+                <div class="alert-message">${alert.message}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Update News Content
+function updateNewsContent() {
+    const container = document.getElementById('newsContent');
+    if (!container) return;
+    
+    const news = appData.news[currentState.code] || [];
+    
+    if (news.length === 0) {
+        container.innerHTML = '<p class="empty-state">No news found for this state</p>';
+        return;
+    }
+    
+    container.innerHTML = news.map(item => `
+        <div class="news-item">
+            <div class="news-header">
+                <h4 class="news-headline">${item.headline}</h4>
+                <span class="news-sentiment ${getSentimentClass(item.sentiment)}">
+                    ${item.sentiment > 0 ? '+' : ''}${item.sentiment.toFixed(1)}
+                </span>
+            </div>
+            <div class="news-meta">
+                <span>${item.source}</span>
+                <span>${formatDate(item.date)}</span>
+            </div>
+            <div class="news-summary">${item.summary}</div>
+        </div>
+    `).join('');
+}
+
+// Update AI Analysis
+function updateAIAnalysis() {
+    const container = document.getElementById('aiAnalysisContent');
+    if (!container) return;
+    
+    const analysis = appData.aiAnalysis[currentState.code];
+    
+    if (!analysis) {
+        container.innerHTML = '<p class="empty-state">No AI analysis available for this state</p>';
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="ai-analysis-grid">
+            <div class="analysis-item">
+                <div class="analysis-label">Concentration Limits</div>
+                <div class="analysis-value">${analysis.concentrationLimits}</div>
+            </div>
+            <div class="analysis-item">
+                <div class="analysis-label">Prohibited Investments</div>
+                <div class="analysis-value">${analysis.prohibitedInvestments}</div>
+            </div>
+            <div class="analysis-item">
+                <div class="analysis-label">ESG Requirements</div>
+                <div class="analysis-value">${analysis.esgRequirements}</div>
+            </div>
+            <div class="analysis-item">
+                <div class="analysis-label">Sanctions Compliance</div>
+                <div class="analysis-value">${analysis.sanctionsCompliance}</div>
+            </div>
+        </div>
+        <div class="confidence-score">
+            <div class="confidence-label">AI Confidence Score</div>
+            <div class="confidence-value">${(analysis.confidenceScore * 100).toFixed(0)}%</div>
+        </div>
+    `;
+}
+
+// Update ESG Content
+function updateESGContent() {
+    const container = document.getElementById('esgContent');
+    if (!container) return;
+    
+    const analysis = appData.aiAnalysis[currentState.code];
+    
+    if (!analysis) {
+        container.innerHTML = '<p class="empty-state">No ESG requirements available for this state</p>';
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="esg-requirements">
+            <div class="esg-item">
+                <div class="esg-category">ESG Integration</div>
+                <div class="esg-description">${analysis.esgRequirements}</div>
+            </div>
+            <div class="esg-item">
+                <div class="esg-category">Investment Restrictions</div>
+                <div class="esg-description">${analysis.prohibitedInvestments}</div>
+            </div>
+        </div>
+    `;
+}
+
+// Handle Report Functions
+function handlePreviewReport() {
+    if (!currentState) return;
+    
+    alert(`Preview Report for ${currentState.name}\n\nThis would open a preview of the weekly regulatory report including:\n- Regulatory changes\n- Compliance alerts\n- Political developments\n- ESG updates`);
+}
+
+function handleDownloadReport() {
+    if (!currentState) return;
+    
+    alert(`Download Report for ${currentState.name}\n\nThis would generate and download a PDF report with comprehensive regulatory monitoring data.`);
+}
+
+// Utility Functions
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -454,95 +490,28 @@ function formatDate(dateString) {
     });
 }
 
-// Quick access button handlers
-document.addEventListener('DOMContentLoaded', function() {
-    const quickButtons = document.querySelectorAll('.quick-btn');
-    
-    quickButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const buttonText = this.textContent.trim();
-            
-            switch(buttonText) {
-                case 'New York Focus':
-                    showSection('jurisdictions');
-                    updateActiveNavButton('jurisdictions');
-                    break;
-                case 'ESG Regulations':
-                    showSection('ai-analysis');
-                    updateActiveNavButton('ai-analysis');
-                    break;
-                case 'Political Sentiment':
-                    showSection('sentiment');
-                    updateActiveNavButton('sentiment');
-                    break;
-                case 'Investment Restrictions':
-                    showSection('ai-analysis');
-                    updateActiveNavButton('ai-analysis');
-                    break;
-                case 'Weekly Reports':
-                    showSection('reporting');
-                    updateActiveNavButton('reporting');
-                    break;
-                case 'Client Alerts':
-                    showSection('clients');
-                    updateActiveNavButton('clients');
-                    break;
-            }
-        });
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
     });
-});
-
-function updateActiveNavButton(sectionId) {
-    const navButtons = document.querySelectorAll('.nav-btn');
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    
-    const targetButton = document.querySelector(`[data-section="${sectionId}"]`);
-    if (targetButton) {
-        targetButton.classList.add('active');
-    }
 }
 
-// Map item interactions
-document.addEventListener('DOMContentLoaded', function() {
-    const mapItems = document.querySelectorAll('.map-item');
-    
-    mapItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const jurisdiction = this.dataset.jurisdiction;
-            
-            // Remove active class from all items
-            mapItems.forEach(mapItem => mapItem.classList.remove('selected'));
-            
-            // Add selected class to clicked item
-            this.classList.add('selected');
-            
-            // Here you could filter the jurisdiction list or show details
-            console.log(`Selected jurisdiction: ${jurisdiction}`);
-        });
-    });
-});
+function getSentimentClass(sentiment) {
+    if (sentiment > 0.1) return 'positive';
+    if (sentiment < -0.1) return 'negative';
+    return 'neutral';
+}
 
-// Add some interactive features
-document.addEventListener('DOMContentLoaded', function() {
-    // Add hover effects to metric cards
-    const metricCards = document.querySelectorAll('.metric-card');
-    metricCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-4px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-    
-    // Add click handlers for alert items
-    const alertItems = document.querySelectorAll('.alert-item');
-    alertItems.forEach(item => {
-        item.style.cursor = 'pointer';
-        item.addEventListener('click', function() {
-            // Toggle expanded view or show details modal
-            this.classList.toggle('expanded');
-        });
-    });
-});
+function updateLastReportDate() {
+    const lastReportDate = document.getElementById('lastReportDate');
+    if (lastReportDate) {
+        const now = new Date();
+        const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        lastReportDate.textContent = formatDate(lastWeek.toISOString());
+    }
+}
