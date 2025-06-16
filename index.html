@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StateRegWatch Pro - Multi-State Regulatory Monitoring</title>
+    <title>StateRegWatch Pro - Enhanced Regulatory Monitoring</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,16 +13,27 @@
             <div class="header-content">
                 <div class="logo-section">
                     <h1 class="header-title">StateRegWatch Pro</h1>
-                    <p class="header-tagline">Multi-State Regulatory Monitoring for Investment Managers</p>
+                    <p class="header-tagline">Enhanced Multi-State Regulatory Monitoring for Investment Professionals</p>
                 </div>
                 <div class="header-controls">
                     <div class="state-selector-container">
-                        <label for="stateSelector" class="form-label">Select State:</label>
-                        <select id="stateSelector" class="form-control state-selector">
+                        <label for="stateSelector" class="form-label" 
+                               data-tooltip="Select a state to monitor its regulatory environment and compliance requirements">
+                            Select State:
+                        </label>
+                        <select id="stateSelector" class="form-control state-selector" 
+                                aria-describedby="state-help">
                             <option value="">Choose a state...</option>
                         </select>
                     </div>
-                    <button id="refreshBtn" class="btn btn--primary refresh-btn">
+                    <button id="helpToggle" class="btn btn--secondary help-toggle" 
+                            data-tooltip="Toggle help mode to see explanations for all features"
+                            aria-label="Toggle help mode">
+                        <span class="help-icon">?</span>
+                        <span class="help-text">Help</span>
+                    </button>
+                    <button id="refreshBtn" class="btn btn--primary refresh-btn"
+                            data-tooltip="Refresh all data sources for the selected state">
                         <span class="refresh-text">Refresh Data</span>
                         <span class="refresh-spinner hidden">⟳</span>
                     </button>
@@ -41,8 +52,12 @@
                         <div class="state-info-content">
                             <h2 id="currentStateName">Select a State</h2>
                             <div class="state-meta">
-                                <span class="last-updated">Last Updated: <span id="lastUpdated">--</span></span>
-                                <div id="sentimentIndicator" class="sentiment-indicator">
+                                <span class="last-updated" 
+                                      data-tooltip="Shows when regulatory data was last updated from official sources">
+                                    Last Updated: <span id="lastUpdated">--</span>
+                                </span>
+                                <div id="sentimentIndicator" class="sentiment-indicator"
+                                     data-tooltip="Political sentiment score ranging from -1 (restrictive) to +1 (favorable) for investment regulations">
                                     <span class="sentiment-label">Political Sentiment:</span>
                                     <div class="sentiment-meter">
                                         <div class="sentiment-bar">
@@ -55,28 +70,33 @@
                         </div>
                     </div>
                 </div>
+                <div class="help-overlay" id="stateInfoHelp">
+                    <div class="help-content">
+                        <strong>State Overview:</strong> This section shows basic information about the selected state's regulatory environment, including when data was last updated and the overall political sentiment toward investment regulations.
+                    </div>
+                </div>
             </div>
 
             <!-- Quick Stats Dashboard -->
             <div id="quickStats" class="quick-stats hidden">
                 <div class="stats-grid">
-                    <div class="stat-card card">
+                    <div class="stat-card card" data-tooltip="Total number of regulations currently being monitored for compliance changes">
                         <div class="card__body">
                             <div class="stat-content">
                                 <div class="stat-number" id="totalRegulations">--</div>
-                                <div class="stat-label">Total Regulations Monitored</div>
+                                <div class="stat-label">Active Regulations</div>
                             </div>
                         </div>
                     </div>
-                    <div class="stat-card card">
+                    <div class="stat-card card" data-tooltip="Number of regulatory changes detected in the past 7 days">
                         <div class="card__body">
                             <div class="stat-content">
                                 <div class="stat-number" id="recentChanges">--</div>
-                                <div class="stat-label">Recent Changes (7 days)</div>
+                                <div class="stat-label">Recent Changes</div>
                             </div>
                         </div>
                     </div>
-                    <div class="stat-card card">
+                    <div class="stat-card card" data-tooltip="High-priority alerts requiring immediate attention from compliance teams">
                         <div class="card__body">
                             <div class="stat-content">
                                 <div class="stat-number" id="highRiskAlerts">--</div>
@@ -84,13 +104,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="stat-card card">
+                    <div class="stat-card card" data-tooltip="Recent updates to ESG-related investment regulations and requirements">
                         <div class="card__body">
                             <div class="stat-content">
-                                <div class="stat-number" id="esgUpdates">--</div>
-                                <div class="stat-label">ESG Updates</div>
+                                <div class="stat-number" id="politicalSentiment">--</div>
+                                <div class="stat-label">Political Climate</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="help-overlay" id="statsHelp">
+                    <div class="help-content">
+                        <strong>Quick Stats:</strong> These metrics provide an at-a-glance view of regulatory activity and compliance requirements for the selected state.
                     </div>
                 </div>
             </div>
@@ -101,7 +126,9 @@
                 <section class="dashboard-section">
                     <div class="card">
                         <div class="card__header">
-                            <h3>Regulatory Changes</h3>
+                            <h3 data-tooltip="Recent changes to state regulations affecting investment management">
+                                Regulatory Changes
+                            </h3>
                         </div>
                         <div class="card__body">
                             <div id="regulationsContent" class="regulations-content">
@@ -109,18 +136,9 @@
                             </div>
                         </div>
                     </div>
-                </section>
-
-                <!-- Compliance Alerts -->
-                <section class="dashboard-section">
-                    <div class="card">
-                        <div class="card__header">
-                            <h3>Compliance Alerts</h3>
-                        </div>
-                        <div class="card__body">
-                            <div id="alertsContent" class="alerts-content">
-                                <p class="empty-state">Select a state to view compliance alerts</p>
-                            </div>
+                    <div class="help-overlay" id="regulationsHelp">
+                        <div class="help-content">
+                            <strong>Regulatory Changes:</strong> This section shows recent regulatory changes that may affect investment management activities. Each entry includes impact assessment, effective dates, and links to official sources for verification.
                         </div>
                     </div>
                 </section>
@@ -129,12 +147,19 @@
                 <section class="dashboard-section">
                     <div class="card">
                         <div class="card__header">
-                            <h3>State News Feed</h3>
+                            <h3 data-tooltip="Political developments and news that may signal future regulatory changes">
+                                Political News & Analysis
+                            </h3>
                         </div>
                         <div class="card__body">
                             <div id="newsContent" class="news-content">
                                 <p class="empty-state">Select a state to view news feed</p>
                             </div>
+                        </div>
+                    </div>
+                    <div class="help-overlay" id="newsHelp">
+                        <div class="help-content">
+                            <strong>Political News:</strong> Political developments and news that may signal future regulatory changes. Sentiment analysis helps gauge the political climate for regulatory enforcement.
                         </div>
                     </div>
                 </section>
@@ -143,7 +168,9 @@
                 <section class="dashboard-section">
                     <div class="card">
                         <div class="card__header">
-                            <h3>AI Analysis Results</h3>
+                            <h3 data-tooltip="AI-powered analysis of regulatory text to identify investment restrictions and requirements">
+                                AI Compliance Analysis
+                            </h3>
                         </div>
                         <div class="card__body">
                             <div id="aiAnalysisContent" class="ai-analysis-content">
@@ -151,39 +178,30 @@
                             </div>
                         </div>
                     </div>
-                </section>
-
-                <!-- ESG Regulatory Tracking -->
-                <section class="dashboard-section">
-                    <div class="card">
-                        <div class="card__header">
-                            <h3>ESG Regulatory Tracking</h3>
-                        </div>
-                        <div class="card__body">
-                            <div id="esgContent" class="esg-content">
-                                <p class="empty-state">Select a state to view ESG requirements</p>
-                            </div>
+                    <div class="help-overlay" id="aiAnalysisHelp">
+                        <div class="help-content">
+                            <strong>AI Analysis:</strong> AI-powered analysis of regulatory text to identify specific investment restrictions, concentration limits, and compliance requirements. Confidence scores indicate the reliability of each analysis.
                         </div>
                     </div>
                 </section>
 
-                <!-- Weekly Reporting Interface -->
+                <!-- Sources Reference -->
                 <section class="dashboard-section">
                     <div class="card">
                         <div class="card__header">
-                            <h3>Weekly Reporting</h3>
+                            <h3 data-tooltip="Complete list of all sources referenced in regulatory monitoring">
+                                Sources & References
+                            </h3>
                         </div>
                         <div class="card__body">
-                            <div class="reporting-interface">
-                                <p class="report-description">Generate comprehensive weekly reports for regulatory changes and compliance updates.</p>
-                                <div class="report-actions">
-                                    <button class="btn btn--secondary" id="previewReportBtn">Preview Report</button>
-                                    <button class="btn btn--primary" id="downloadReportBtn">Download PDF</button>
-                                </div>
-                                <div class="report-timestamp">
-                                    <small>Last report generated: <span id="lastReportDate">--</span></small>
-                                </div>
+                            <div id="sourcesContent" class="sources-content">
+                                <p class="empty-state">Select a state to view sources</p>
                             </div>
+                        </div>
+                    </div>
+                    <div class="help-overlay" id="sourcesHelp">
+                        <div class="help-content">
+                            <strong>Sources:</strong> All information is linked to authoritative sources including state legislation, administrative codes, and verified news outlets. Click any source link to verify information directly.
                         </div>
                     </div>
                 </section>
@@ -196,6 +214,21 @@
                         <div class="empty-state-large">
                             <h2>Welcome to StateRegWatch Pro</h2>
                             <p>Select a state from the dropdown above to begin monitoring regulatory changes and compliance requirements.</p>
+                            <div class="quick-help">
+                                <p><strong>Quick Start:</strong></p>
+                                <ul>
+                                    <li>Choose a state from the dropdown menu</li>
+                                    <li>Click the "?" help button to enable tooltips</li>
+                                    <li>Hover over any element to see explanations</li>
+                                    <li>Click source links to verify information</li>
+                                </ul>
+                                <p><strong>Keyboard Shortcuts:</strong></p>
+                                <ul>
+                                    <li><kbd>H</kbd> - Toggle help mode</li>
+                                    <li><kbd>R</kbd> - Refresh data</li>
+                                    <li><kbd>1-3</kbd> - Select states (NY, CA, TX)</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -203,11 +236,62 @@
         </div>
     </main>
 
+    <!-- Tooltip Container -->
+    <div id="tooltip" class="tooltip" role="tooltip"></div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="help-modal hidden" role="dialog" aria-labelledby="helpModalTitle" aria-hidden="true">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h2 id="helpModalTitle">StateRegWatch Pro - User Guide</h2>
+                <button class="help-modal-close" aria-label="Close help modal">&times;</button>
+            </div>
+            <div class="help-modal-body">
+                <div class="help-section">
+                    <h3>Getting Started</h3>
+                    <p>StateRegWatch Pro monitors regulatory changes across multiple states to help investment professionals stay compliant with evolving requirements.</p>
+                    <ul>
+                        <li><strong>Select a State:</strong> Use the dropdown to choose which state's regulations to monitor</li>
+                        <li><strong>Review Changes:</strong> Check regulatory changes, news, and AI analysis</li>
+                        <li><strong>Verify Sources:</strong> Click source links to verify information directly</li>
+                        <li><strong>Enable Help:</strong> Click the "?" button to see tooltips on all elements</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>Understanding the Dashboard</h3>
+                    <ul>
+                        <li><strong>Regulatory Changes:</strong> Recent changes that affect investment management</li>
+                        <li><strong>Political News:</strong> News that may signal future regulatory changes</li>
+                        <li><strong>AI Analysis:</strong> Automated analysis of compliance requirements</li>
+                        <li><strong>Sources:</strong> All referenced materials with verification links</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>Keyboard Shortcuts</h3>
+                    <ul>
+                        <li><kbd>H</kbd> - Toggle help mode</li>
+                        <li><kbd>R</kbd> - Refresh data</li>
+                        <li><kbd>1</kbd> - Select New York</li>
+                        <li><kbd>2</kbd> - Select California</li>
+                        <li><kbd>3</kbd> - Select Texas</li>
+                        <li><kbd>Esc</kbd> - Close help modal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay hidden">
         <div class="loading-content">
             <div class="loading-spinner"></div>
             <p>Refreshing data sources...</p>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="progress-text">0%</span>
+            </div>
         </div>
     </div>
 
