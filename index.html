@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RegTech Monitor Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="header-title">RegTech Monitor Pro</h1>
+                <nav class="header-nav">
+                    <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+                    <button class="nav-btn" data-section="jurisdictions">Jurisdictions</button>
+                    <button class="nav-btn" data-section="ai-analysis">AI Analysis</button>
+                    <button class="nav-btn" data-section="sentiment">Political Sentiment</button>
+                    <button class="nav-btn" data-section="reporting">Reporting</button>
+                    <button class="nav-btn" data-section="clients">Clients</button>
+                    <button class="nav-btn" data-section="settings">Settings</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2>Dashboard Overview</h2>
+                    <div class="last-updated">Last updated: June 13, 2025, 8:48 AM</div>
+                </div>
+
+                <!-- Metrics Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="active-alerts">27</div>
+                        <div class="metric-label">Active Alerts</div>
+                        <div class="metric-trend up">+3 this week</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="jurisdictions-monitored">15</div>
+                        <div class="metric-label">Jurisdictions Monitored</div>
+                        <div class="metric-trend stable">No change</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="ai-analysis-pending">8</div>
+                        <div class="metric-label">AI Analysis Pending</div>
+                        <div class="metric-trend down">-2 from yesterday</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="weekly-reports">142</div>
+                        <div class="metric-label">Weekly Reports Generated</div>
+                        <div class="metric-trend up">+1 this week</div>
+                    </div>
+                </div>
+
+                <!-- Quick Access Buttons -->
+                <div class="quick-access">
+                    <h3>Quick Access</h3>
+                    <div class="quick-access-grid">
+                        <button class="quick-btn btn--primary">New York Focus</button>
+                        <button class="quick-btn btn--secondary">ESG Regulations</button>
+                        <button class="quick-btn btn--secondary">Political Sentiment</button>
+                        <button class="quick-btn btn--secondary">Investment Restrictions</button>
+                        <button class="quick-btn btn--secondary">Weekly Reports</button>
+                        <button class="quick-btn btn--secondary">Client Alerts</button>
+                    </div>
+                </div>
+
+                <!-- Recent Alerts -->
+                <div class="alerts-panel">
+                    <h3>Recent Regulatory Alerts</h3>
+                    <div class="alerts-list" id="alerts-list">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Jurisdictions Section -->
+            <section id="jurisdictions" class="section">
+                <div class="section-header">
+                    <h2>Jurisdiction Monitoring</h2>
+                </div>
+
+                <div class="jurisdictions-content">
+                    <div class="map-panel">
+                        <h3>Monitoring Coverage Map</h3>
+                        <div class="map-placeholder">
+                            <div class="map-item active" data-jurisdiction="NY State">NY State</div>
+                            <div class="map-item active" data-jurisdiction="NYC">NYC</div>
+                            <div class="map-item active" data-jurisdiction="CA">CA</div>
+                            <div class="map-item inactive" data-jurisdiction="TX">TX</div>
+                            <div class="map-item inactive" data-jurisdiction="FL">FL</div>
+                        </div>
+                    </div>
+
+                    <div class="jurisdiction-list">
+                        <h3>Active Jurisdictions</h3>
+                        <div id="jurisdiction-details">
+                            <!-- Dynamic content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Analysis Section -->
+            <section id="ai-analysis" class="section">
+                <div class="section-header">
+                    <h2>AI Analysis Engine</h2>
+                </div>
+
+                <div class="ai-dashboard">
+                    <div class="analysis-status">
+                        <h3>Analysis Status</h3>
+                        <div class="status-grid">
+                            <div class="status-item">
+                                <div class="status-label">Processing Queue</div>
+                                <div class="status-value">8 items</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-label">Completed Today</div>
+                                <div class="status-value">12 analyses</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-label">Average Confidence</div>
+                                <div class="status-value">89%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recent-analysis">
+                        <h3>Recent AI Insights</h3>
+                        <div id="ai-analysis-list">
+                            <!-- Dynamic content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Political Sentiment Section -->
+            <section id="sentiment" class="section">
+                <div class="section-header">
+                    <h2>Political Sentiment Tracker</h2>
+                </div>
+
+                <div class="sentiment-dashboard">
+                    <div class="sentiment-overview">
+                        <div class="current-sentiment">
+                            <h3>Current Trend</h3>
+                            <div class="sentiment-indicator positive">
+                                <div class="sentiment-text">Positive for ESG initiatives</div>
+                                <div class="trend-arrow up">↗</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sentiment-chart">
+                        <h3>Sentiment Trends</h3>
+                        <canvas id="sentimentChart" height="200"></canvas>
+                    </div>
+
+                    <div class="key-indicators">
+                        <h3>Key Political Indicators</h3>
+                        <div id="political-indicators">
+                            <!-- Dynamic content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reporting Section -->
+            <section id="reporting" class="section">
+                <div class="section-header">
+                    <h2>Weekly Reports</h2>
+                    <button class="btn btn--primary">Generate New Report</button>
+                </div>
+
+                <div class="reporting-dashboard">
+                    <div class="report-generator">
+                        <h3>Report Configuration</h3>
+                        <div class="form-group">
+                            <label class="form-label">Report Period</label>
+                            <select class="form-control">
+                                <option>Current Week</option>
+                                <option>Last Week</option>
+                                <option>Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Clients</label>
+                            <select class="form-control">
+                                <option>All Clients</option>
+                                <option>NYC Teachers Retirement System</option>
+                                <option>NY State Common Retirement Fund</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="recent-reports">
+                        <h3>Recent Reports</h3>
+                        <div id="reports-list">
+                            <!-- Dynamic content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients" class="section">
+                <div class="section-header">
+                    <h2>Client Management</h2>
+                </div>
+
+                <div class="clients-dashboard">
+                    <div class="client-overview">
+                        <h3>Client Portfolio Overview</h3>
+                        <div id="clients-list">
+                            <!-- Dynamic content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="section">
+                <div class="section-header">
+                    <h2>Settings & Configuration</h2>
+                </div>
+
+                <div class="settings-dashboard">
+                    <div class="settings-group">
+                        <h3>API Integration Management</h3>
+                        <div class="api-status">
+                            <div class="api-item">
+                                <span class="api-name">Thomson Reuters API</span>
+                                <span class="status status--success">Connected</span>
+                            </div>
+                            <div class="api-item">
+                                <span class="api-name">Bloomberg Law API</span>
+                                <span class="status status--success">Connected</span>
+                            </div>
+                            <div class="api-item">
+                                <span class="api-name">NY Legislature API</span>
+                                <span class="status status--warning">Rate Limited</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Alert Configuration</h3>
+                        <div class="form-group">
+                            <label class="form-label">High Priority Threshold</label>
+                            <select class="form-control">
+                                <option>Investment Mandate Impact</option>
+                                <option>Fiduciary Standard Changes</option>
+                                <option>ESG Requirements</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Monitoring Frequency</label>
+                            <select class="form-control">
+                                <option>Real-time</option>
+                                <option>Hourly</option>
+                                <option>Daily</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
